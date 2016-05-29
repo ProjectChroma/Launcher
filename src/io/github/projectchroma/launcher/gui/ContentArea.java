@@ -29,12 +29,12 @@ public class ContentArea extends BaseComponent{
 		add(new Spacer(1, 1, false), c);
 		
 		c.gridy++;
-		c.weighty = 2;
+		c.weighty = 10;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		add(new PlayArea(), c);
 		
 		c.gridx++;
 		c.anchor = GridBagConstraints.NORTHEAST;
-		add(new UpdateArea(), c);
+		add(SettingsArea.instance(), c);
 	}
 }

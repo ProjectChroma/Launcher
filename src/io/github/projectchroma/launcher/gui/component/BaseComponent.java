@@ -6,8 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.LayoutManager;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JTextField;
 
 public class BaseComponent extends JComponent{
 	private static final long serialVersionUID = 1L;
@@ -34,17 +34,14 @@ public class BaseComponent extends JComponent{
 		g.fillRect(0, 0, getWidth(), getHeight());
 	}
 	
-	protected JTextField createText(String text, Font font){return createText(text, font, false, getForeground());}
-	protected JTextField createText(String text, Font font, boolean editable){return createText(text, font, editable, getForeground());}
-	protected JTextField createText(String text, Font font, Color c){return createText(text, font, false, c);}
-	protected JTextField createText(String text, Font font, boolean editable, Color c){
-		JTextField field = new JTextField(text);
-		field.setEditable(editable);
-		field.setFocusable(editable);
-		field.setBorder(null);
-		field.setForeground(c);
-		field.setBackground(getBackground());
-		field.setFont(font);
-		return field;
+	protected CustomTextField createText(String text, Font font){return createText(text, font, false, getForeground());}
+	protected CustomTextField createText(String text, Font font, boolean editable){return createText(text, font, editable, getForeground());}
+	protected CustomTextField createText(String text, Font font, Color c){return createText(text, font, false, c);}
+	protected CustomTextField createText(String text, Font font, boolean editable, Color c){
+		return new CustomTextField(text, font, editable, getBackground(), c);
+	}
+	
+	protected JButton createButton(String text, Font font, Runnable click){
+		return new CustomButton(text, font, Color.gray, getForeground(), Color.darkGray, click);
 	}
 }

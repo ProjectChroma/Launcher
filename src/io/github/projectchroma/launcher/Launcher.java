@@ -1,5 +1,6 @@
 package io.github.projectchroma.launcher;
 
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
@@ -9,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import com.google.gson.Gson;
 
+import io.github.projectchroma.launcher.gui.SettingsArea;
 import io.github.projectchroma.launcher.gui.Window;
 
 public class Launcher{
@@ -32,17 +34,22 @@ public class Launcher{
 			System.exit(-1);
 		}
 		
+		FileInterface.init();
+		
 		Window window = new Window();
 		window.show();
-	}
-	public static boolean update() throws IOException{
-		String online = WebInterface.getLatestVersion("master").sha, local = FileInterface.getDownloadedVersion();
-		if(online.equals(local)){//No update
-			return false;
-		}else{
-			WebInterface.download("Chroma.jar", FileInterface.JAR_FILE);
-			FileInterface.writeSHA(online);
-			return true;
+		
+		try{
+			String onlineVersion = WebInterface.getLatestChromaVersion("master").sha;
+			System.out.println("Online version:\t" + onlineVersion);
+			String localVersion = FileInterface.getDownloadedChromaVersion();
+			System.out.println("Local version:\t" + localVersion);
+			if(onlineVersion.equals(localVersion)) SettingsArea.instance().setChromaStatus(SettingsArea.UP_TO_DATE);
+			else SettingsArea.instance().setChromaStatus(SettingsArea.UPDATE_AVAILABLE);
+		}catch(IOException ex){
+			SettingsArea.instance().setChromaStatus(SettingsArea.ERROR);
+			System.err.println("Error finding update for Chroma");
+			ex.printStackTrace();
 		}
 	}
 	public static Font getFont(float size){
@@ -50,5 +57,40 @@ public class Launcher{
 	}
 	public static BufferedImage getLogo(){
 		return logo;
+	}
+	
+	public static void update(){
+		try{
+			WebInterface.download("https://media.githubusercontent.com/media/ProjectChroma/Chroma/master/Chroma.jar", FileInterface.JAR_FILE);
+			WebInterface.download("https://media.githubusercontent.com/media/ProjectChroma/Launcher/master/lib.zip", FileInterface.LIB_FILE);
+			FileInterface.extract(FileInterface.LIB_FILE, FileInterface.LIB_DIR);
+			FileInterface.writeSHA(WebInterface.getLatestChromaVersion("master").sha);
+			SettingsArea.instance().setChromaStatus(SettingsArea.UP_TO_DATE);
+			System.out.println("Update complete!");
+		}catch(IOException ex){
+			System.err.println("Error updating Chroma");
+			ex.printStackTrace();
+			SettingsArea.instance().setChromaStatus(SettingsArea.ERROR);
+		}
+	}
+	public static void run(){
+		try{
+			String cmd = "java \"-Djava.library.path=" + FileInterface.LIB_DIR + "\" -jar " + FileInterface.JAR_FILE;
+			System.out.println("Running game: " + cmd);
+			Process p = Runtime.getRuntime().exec(cmd);
+			new FileCopier(p.getInputStream(), System.out).start();
+			new FileCopier(p.getErrorStream(), System.err).start();
+		}catch(IOException ex){
+			System.err.println("Error running Chroma");
+			ex.printStackTrace();
+		}
+	}
+	public static void openDataDir(){
+		try{
+			Desktop.getDesktop().open(FileInterface.DIR);
+		}catch(IOException ex){
+			System.err.println("Error opening data folder " + FileInterface.DIR);
+			ex.printStackTrace();
+		}
 	}
 }

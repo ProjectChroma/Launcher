@@ -9,11 +9,12 @@ import java.nio.file.StandardCopyOption;
 
 public class WebInterface{
 	private static final String GH_USER = "ProjectChroma", GH_REPO = "Chroma";
-	public static GithubCommit getLatestVersion(String branch) throws IOException{
+	public static GithubCommit getLatestChromaVersion(String branch) throws IOException{
 		return Launcher.GSON.fromJson(new InputStreamReader(new URL("https://api.github.com/repos/" + GH_USER + "/" + GH_REPO + "/commits/" + branch).openStream()), GithubCommit.class);
 	}
-	public static void download(String fileName, File file) throws IOException{
-		Files.copy(new URL("https://raw.githubusercontent.com/ProjectChroma/Chroma/master/" + fileName).openStream(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	public static void download(String url, File file) throws IOException{
+		System.out.println("Downloading " + url + " to " + file);
+		Files.copy(new URL(url).openStream(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 	public static class GithubCommit{
 		public String sha;

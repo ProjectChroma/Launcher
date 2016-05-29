@@ -26,10 +26,10 @@ public class PlayArea extends BaseComponent{
 		
 		Font textFont = Launcher.getFont(24);
 		c.gridy++;
-		add(createText("Launch Game", textFont), c);
+		add(createButton("Launch Game", textFont, () -> {Launcher.run();}), c);
 		
 		c.gridy++;
-		add(createText("Open Data Folder", textFont), c);
+		add(createButton("Open Data Folder", textFont, () -> {Launcher.openDataDir();}), c);
 		
 		c.weighty = 1;
 		add(new Spacer(1, 1, false), c);

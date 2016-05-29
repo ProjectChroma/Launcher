@@ -4,11 +4,11 @@
 .settings
 bin/
 
-#Data
-data/
-
 #Libraries
 lib/
 
 #Random file storage
 misc/
+
+#Game data
+chroma/
