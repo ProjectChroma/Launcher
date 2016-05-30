@@ -61,8 +61,9 @@ public class Launcher{
 	
 	public static void update(){
 		try{
-			WebInterface.download("https://media.githubusercontent.com/media/ProjectChroma/Chroma/master/Chroma.jar", FileInterface.JAR_FILE);
-			WebInterface.download("https://media.githubusercontent.com/media/ProjectChroma/Launcher/master/lib.zip", FileInterface.LIB_FILE);
+			String sha = WebInterface.getLatestChromaVersion("master").sha;
+			WebInterface.download("https://media.githubusercontent.com/media/ProjectChroma/Chroma/" + sha + "/Chroma.jar", FileInterface.JAR_FILE);
+			WebInterface.download("https://media.githubusercontent.com/media/ProjectChroma/Launcher/" + sha + "/lib.zip", FileInterface.LIB_FILE);
 			FileInterface.extract(FileInterface.LIB_FILE, FileInterface.LIB_DIR);
 			FileInterface.writeSHA(WebInterface.getLatestChromaVersion("master").sha);
 			SettingsArea.instance().setChromaStatus(SettingsArea.UP_TO_DATE);
