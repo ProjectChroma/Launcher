@@ -21,11 +21,9 @@ public class FileInterface{
 	public static final File LIB_FILE = new File(DIR, "lib.zip");
 	/**File for storing native files required for the game*/
 	public static final File LIB_DIR = new File(DIR, "lib");
-	/**File for storing native files required for the game*/
-	public static final File NATIVE_DIR = new File(LIB_DIR, "natives");
 	public static void init(){
 		DIR.mkdirs();
-		NATIVE_DIR.mkdirs();
+		LIB_DIR.mkdir();
 	}
 	public static String getDownloadedChromaVersion(){
 		try(Scanner in = new Scanner(SHA_FILE)){
@@ -43,11 +41,12 @@ public class FileInterface{
 			ZipEntry entry;
 			while((entry = zip.getNextEntry()) != null){
 				File out = new File(dir, entry.getName());
-				System.out.println(out);
 				if(entry.isDirectory()){
 					out.mkdirs();
 				}else{
-					FileCopier.copy(zip, new FileOutputStream(out));
+					FileOutputStream output = new FileOutputStream(out);
+					FileCopier.copy(zip, output);
+					output.close();
 				}
 				zip.closeEntry();
 			}
