@@ -13,8 +13,8 @@ import com.google.gson.Gson;
 
 import io.github.projectchroma.launcher.gui.SettingsArea;
 import io.github.projectchroma.launcher.gui.Window;
-import io.github.projectchroma.launcher.io.FileCopier;
 import io.github.projectchroma.launcher.io.FileInterface;
+import io.github.projectchroma.launcher.io.GameRunner;
 import io.github.projectchroma.launcher.io.Log;
 import io.github.projectchroma.launcher.io.WebInterface;
 
@@ -93,8 +93,7 @@ public class Launcher{
 			String cmd = "java \"-Djava.library.path=" + FileInterface.LIB_DIR + "\" -jar " + FileInterface.JAR_FILE;
 			log.write(cmd, Log.DEBUG);
 			Process p = Runtime.getRuntime().exec(cmd);
-			new FileCopier(p.getInputStream(), System.out).start();
-			new FileCopier(p.getErrorStream(), System.err).start();
+			new GameRunner(p).start();
 		}catch(IOException ex){
 			log.write("Error running Chroma", Log.ERROR);
 			ex.printStackTrace();
