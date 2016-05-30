@@ -12,3 +12,6 @@ misc/
 
 #Game data
 chroma/
+
+#Logs
+logs/

@@ -1,4 +1,4 @@
-package io.github.projectchroma.launcher;
+package io.github.projectchroma.launcher.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,20 +10,25 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import io.github.projectchroma.launcher.Launcher;
+
 public class FileInterface{
-	/**Base directory for all files*/
-	public static final File DIR = new File("chroma");
+	/**Directory for all files related to the game download*/
+	public static final File CHROMA_DIR = new File("chroma");
 	/**File for storing the commit SHA last downloaded*/
-	public static final File SHA_FILE = new File(DIR, "sha.dat");
+	public static final File SHA_FILE = new File(CHROMA_DIR, "sha.dat");
 	/**File for storing the game JAR file*/
-	public static final File JAR_FILE = new File(DIR, "Chroma.jar");
+	public static final File JAR_FILE = new File(CHROMA_DIR, "Chroma.jar");
 	/**File where the compressed libraries and natives are downloaded to*/
-	public static final File LIB_FILE = new File(DIR, "lib.zip");
+	public static final File LIB_FILE = new File(CHROMA_DIR, "lib.zip");
 	/**File for storing native files required for the game*/
-	public static final File LIB_DIR = new File(DIR, "lib");
+	public static final File LIB_DIR = new File(CHROMA_DIR, "lib");
+	/**File for accumulating launcher logs*/
+	public static final File LOG_DIR = new File("logs");
 	public static void init(){
-		DIR.mkdirs();
+		CHROMA_DIR.mkdirs();
 		LIB_DIR.mkdir();
+		LOG_DIR.mkdirs();
 	}
 	public static String getDownloadedChromaVersion(){
 		try(Scanner in = new Scanner(SHA_FILE)){
@@ -31,7 +36,7 @@ public class FileInterface{
 		}catch(FileNotFoundException ex){return null;}
 	}
 	public static void writeSHA(String sha) throws FileNotFoundException{
-		System.out.println("Writing Chroma commit SHA " + sha);
+		Launcher.log().write("Writing Chroma commit SHA " + sha, Log.DEBUG);
 		try(PrintStream out = new PrintStream(SHA_FILE)){
 			out.println(sha);
 		}

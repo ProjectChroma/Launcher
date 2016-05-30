@@ -1,8 +1,10 @@
-package io.github.projectchroma.launcher;
+package io.github.projectchroma.launcher.io;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import io.github.projectchroma.launcher.Launcher;
 
 public class FileCopier extends Thread{
 	private static final int BUFFER_SIZE = 1024;
@@ -23,7 +25,7 @@ public class FileCopier extends Thread{
 		try(InputStream in = input; OutputStream out = output){
 			copy(in, out, size);
 		}catch(IOException ex){
-			System.err.println("Error copying " + input + " to " + output);
+			Launcher.log().write("Error copying " + input + " to " + output, Log.ERROR);
 			ex.printStackTrace();
 		}
 	}
